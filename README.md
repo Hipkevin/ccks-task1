@@ -9,6 +9,6 @@
 输出：事件类型和事件主体。
 
 # 技术日志
-- [***2021/4/24***]<br>
+- [***2021/4/24  kevin***]<br>
   抽取预训练的词向量：sgns.financial.char(原始文件) ==> embedding_sgns_financial.npz<br>
   使用服创数据+爬取数据+ccks数据 [embeddingExtraction.py]

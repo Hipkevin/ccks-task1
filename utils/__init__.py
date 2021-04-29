@@ -18,3 +18,8 @@ for label in labels:
 # 常量
 UNK = '[UNK]'
 PAD = '[PAD]'
+
+# 标注词典
+tag_dict = {0: 'O',
+            1: 'B',
+            2: 'I'}

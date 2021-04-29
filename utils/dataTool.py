@@ -4,6 +4,7 @@ from utils import label_dict, vocab, UNK, PAD
 
 from torch.utils.data import Dataset
 from torch.utils.data.dataset import T_co
+from tqdm import tqdm
 
 def word2idx(text: str, pad_size: int):
     """
@@ -16,7 +17,7 @@ def word2idx(text: str, pad_size: int):
 
     text_length = len(token)
     if text_length < pad_size:
-        token += [PAD]*(text_length-pad_size)
+        token.extend([PAD]*(pad_size-text_length))
     else:
         token = token[0:pad_size]
 
@@ -24,14 +25,14 @@ def word2idx(text: str, pad_size: int):
     for word in token:
         words_id.append(vocab.get(word, vocab.get(UNK)))
 
-    return words_id
+    return words_id, token
 
 def getTag(text, tag_content):
     """
     获取标注序列
 
     使用index字符串函数查找子串位置
-    :param text: padding后的文本
+    :param text: padding后的文本列表
     :param tag_content: 标注内容
     :return: 返回标注序列
     """
@@ -39,13 +40,12 @@ def getTag(text, tag_content):
     tag_length = len(tag_content)
 
     tag = [0]*text_length
+    text = ''.join(text)
 
-    try:
+    if tag_content in text:
         start = text.index(tag_content)
         tag[start] = 1
-        tag[start+1: start+tag_length-1] = [2] * (tag_length - 1)
-    except ValueError:
-        return tag
+        tag[start + 1: start + tag_length] = [2] * (tag_length - 1)
 
     return tag
 
@@ -68,15 +68,16 @@ class ClassificationDataSet(Dataset):
         with open(file_path, encoding='utf-8') as file:
             sample = file.readlines()
 
-        for s in sample:
+        for s in tqdm(sample):
             # 取数据
+            s = s.strip()
             s = s.split('|')
             text, label = s[0], label_dict[s[1]]
 
             # tokenize
-            text = word2idx(text, pad_size)
+            token, text = word2idx(text, pad_size)
 
-            text_list.append(text)
+            text_list.append(token)
             label_list.append(label)
 
         self.text = torch.LongTensor(text_list)
@@ -100,14 +101,15 @@ class BIODataSet(Dataset):
         with open(file_path, encoding='utf-8') as file:
             sample = file.readlines()
 
-        for s in sample:
+        for s in tqdm(sample):
+            s = s.strip()
             s = s.split('|')
             text, tagContent = s[0], s[1]
 
-            text = word2idx(text, pad_size)
+            token, text = word2idx(text, pad_size)
             tag = getTag(text, tagContent)
 
-            text_list.append(text)
+            text_list.append(token)
             tag_list.append(tag)
 
         self.text = torch.LongTensor(text_list)

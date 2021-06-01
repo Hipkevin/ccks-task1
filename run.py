@@ -27,7 +27,7 @@ if __name__ == '__main__':
     net = BiLstmCRF(config).to(config.device)
     net = torch.nn.parallel.DistributedDataParallel(net, device_ids=[local_rank])
     
-    print(f'GPU {local_rank}' ,'Loading...')
+    print(f'GPU {local_rank}', 'Loading...')
     train_data = BIODataSet('data/train_3w.txt', config)
     val_data = list(BIODataSet('data/val_3w.txt', config))
     test_data = list(BIODataSet('data/test_3w.txt', config))

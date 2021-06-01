@@ -1,4 +1,4 @@
-# CCKS金融领域事件主体抽取
+# CCKS金融领域事件分类&主体抽取
 本次评测任务的文本范围包括互联网上的新闻文本，上市公司发布的公告文本。 
 本次评测任务的事件类型包括：财务造假、偿付能力不足、高层失联/去世、企业破产、重大资损、重大赔付、重大事故、股权冻结、股权质押、增持、减持等。
 
@@ -9,12 +9,23 @@
 输出：事件类型和事件主体。
 
 # 技术日志
-- [***2021/4/24  kevin***]<br>
+- [***2021/4/24***]<br>
   抽取预训练的词向量：sgns.financial.char(原始文件) ==> embedding_sgns_financial.npz<br>
   使用服创数据+爬取数据+ccks数据 [embeddingExtraction.py]
 
 
-- [***2021/4/29  kevin***]<br>
+- [***2021/4/29***]<br>
   完成dataTool API 1.0版本<br>
   ClassificationDataSet ==> 返回文本token以及label<br>
   BIODataSet ==> 返回文本token以及对于的tag序列
+  
+
+- [***2021/5/21***]<br>
+  Pytorch DDP训练模型==>3W条数据+两张RTX3090<br>
+  主要对[run.py]进行调整<br>
+  加入Early Stop模块==>[trainer.py]
+  
+
+- [***2021/5/29***]<br>
+  参数对比实验<br>
+  主要研究参数量对模型性能的影响&学习率调整和优化算法对优化过程的影响<br>

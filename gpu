@@ -1,0 +1,1 @@
+watch -n 0.3 nvidia-smi
